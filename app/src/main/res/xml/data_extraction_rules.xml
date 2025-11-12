@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <data-extraction-rules>
-    <domain-config>
-        <domain includeSubdomains="true">example.com</domain>
-        <domain-config cleartextTrafficPermitted="false">
-            <domain includeSubdomains="true">example.com</domain>
-        </domain-config>
-    </domain-config>
+    <cloud-backup>
+        <!-- Configure cloud backup rules here -->
+        <include domain="file" path="." />
+    </cloud-backup>
+    <device-transfer>
+        <!-- Configure device transfer rules here -->
+        <include domain="file" path="." />
+    </device-transfer>
 </data-extraction-rules>

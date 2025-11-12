@@ -23,3 +23,8 @@
 # Keep jaudiotagger classes
 -keep class org.jaudiotagger.** { *; }
 -keep interface org.jaudiotagger.** { *; }
+
+# Ignore warnings for Java desktop classes not available on Android
+-dontwarn java.awt.**
+-dontwarn javax.imageio.**
+-dontwarn javax.swing.**
