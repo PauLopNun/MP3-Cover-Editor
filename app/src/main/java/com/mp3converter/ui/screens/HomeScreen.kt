@@ -82,14 +82,14 @@ fun HomeScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "MP3 Cover Editor",
+                        "MP3 Metadata Editor",
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF1976D2),
-                    titleContentColor = Color.White
+                    containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface,
+                    titleContentColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
                 )
             )
         }
@@ -128,7 +128,7 @@ fun HomeScreen(
                     .padding(16.dp),
                 elevation = androidx.compose.material3.CardDefaults.cardElevation(8.dp),
                 colors = androidx.compose.material3.CardDefaults.cardColors(
-                    containerColor = Color.White
+                    containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant
                 )
             ) {
                 Column(
@@ -155,7 +155,7 @@ fun HomeScreen(
                 "Step 1: Select Files",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF1976D2),
+                color = androidx.compose.material3.MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 12.dp)
@@ -211,7 +211,7 @@ fun HomeScreen(
                     "Step 2: Edit Metadata",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1976D2),
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 12.dp, top = 16.dp)
@@ -228,8 +228,8 @@ fun HomeScreen(
                         .fillMaxWidth()
                         .height(56.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF1976D2),
-                        contentColor = Color.White
+                        containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+                        contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
                     ),
                     enabled = !isLoading,
                     shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
@@ -240,7 +240,7 @@ fun HomeScreen(
                 ) {
                     if (isLoading) {
                         CircularProgressIndicator(
-                            color = Color.White,
+                            color = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier
                                 .width(24.dp)
                                 .height(24.dp)
@@ -255,7 +255,7 @@ fun HomeScreen(
                         .fillMaxWidth()
                         .padding(vertical = 32.dp),
                     colors = androidx.compose.material3.CardDefaults.cardColors(
-                        containerColor = Color(0xFFF5F5F5)
+                        containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant
                     )
                 ) {
                     Text(
@@ -263,7 +263,7 @@ fun HomeScreen(
                         modifier = Modifier
                             .padding(24.dp)
                             .fillMaxWidth(),
-                        color = Color.Gray,
+                        color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 16.sp,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center
                     )
@@ -279,18 +279,30 @@ private fun InfoBox(
     value: String,
     modifier: Modifier = Modifier
 ) {
-    Column(
+    androidx.compose.material3.Card(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(12.dp)
-            .background(
-                color = Color(0xFFE8F5E9),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
-            )
-            .padding(12.dp)
+            .fillMaxWidth(),
+        colors = androidx.compose.material3.CardDefaults.cardColors(
+            containerColor = androidx.compose.material3.MaterialTheme.colorScheme.tertiaryContainer
+        ),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
     ) {
-        Text(title, fontSize = 12.sp, color = Color.Gray)
-        Text(value, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                title,
+                fontSize = 12.sp,
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onTertiaryContainer,
+                fontWeight = FontWeight.Medium
+            )
+            Text(
+                value,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onTertiaryContainer
+            )
+        }
     }
 }
 
@@ -301,51 +313,67 @@ private fun MessageBox(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(12.dp)
-            .background(
-                color = if (isSuccess) Color(0xFFE8F5E9) else Color(0xFFFFEBEE),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
-            )
-            .padding(12.dp)
+    androidx.compose.material3.Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = androidx.compose.material3.CardDefaults.cardColors(
+            containerColor = if (isSuccess)
+                androidx.compose.material3.MaterialTheme.colorScheme.tertiaryContainer
+            else
+                androidx.compose.material3.MaterialTheme.colorScheme.errorContainer
+        ),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
     ) {
-        Text(
-            message,
-            fontSize = 14.sp,
-            color = if (isSuccess) Color(0xFF2E7D32) else Color(0xFFC62828)
-        )
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                message,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = if (isSuccess)
+                    androidx.compose.material3.MaterialTheme.colorScheme.onTertiaryContainer
+                else
+                    androidx.compose.material3.MaterialTheme.colorScheme.onErrorContainer
+            )
+        }
     }
 }
 
 @Composable
 private fun MetadataPreviewBox(metadata: com.mp3converter.data.Mp3Metadata) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = Color(0xFFF5F5F5),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
-            )
-            .padding(12.dp)
+    androidx.compose.material3.Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = androidx.compose.material3.CardDefaults.cardColors(
+            containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant
+        ),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
     ) {
-        PreviewRow("Title", metadata.title)
-        PreviewRow("Artist", metadata.artist)
-        PreviewRow("Album", metadata.album)
-        PreviewRow("Genre", metadata.genre)
-        PreviewRow("Year", metadata.year)
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            PreviewRow("Title", metadata.title)
+            PreviewRow("Artist", metadata.artist)
+            PreviewRow("Album", metadata.album)
+            PreviewRow("Genre", metadata.genre)
+            PreviewRow("Year", metadata.year)
+        }
     }
 }
 
 @Composable
 private fun PreviewRow(label: String, value: String) {
-    Column(modifier = Modifier.padding(vertical = 4.dp)) {
-        Text(label, fontSize = 12.sp, color = Color.Gray)
+    Column(modifier = Modifier.padding(vertical = 6.dp)) {
+        Text(
+            label,
+            fontSize = 12.sp,
+            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = FontWeight.Medium
+        )
         Text(
             value.ifEmpty { "Not set" },
-            fontSize = 13.sp,
-            fontWeight = FontWeight.SemiBold
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
         )
     }
 }

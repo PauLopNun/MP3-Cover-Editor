@@ -60,14 +60,14 @@ fun EditorScreen(
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Back",
-                            tint = Color.White
+                            tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF1976D2),
-                    titleContentColor = Color.White,
-                    navigationIconContentColor = Color.White
+                    containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface,
+                    titleContentColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
                 )
             )
         }
@@ -153,8 +153,8 @@ fun EditorScreen(
                         .weight(1f)
                         .height(56.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF757575),
-                        contentColor = Color.White
+                        containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant,
+                        contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                     ),
                     enabled = !isLoading,
                     shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
@@ -172,8 +172,8 @@ fun EditorScreen(
                         .weight(1f)
                         .height(56.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF1976D2),
-                        contentColor = Color.White
+                        containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+                        contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
                     ),
                     enabled = !isLoading,
                     shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
@@ -184,7 +184,7 @@ fun EditorScreen(
                 ) {
                     if (isLoading) {
                         CircularProgressIndicator(
-                            color = Color.White,
+                            color = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier
                                 .width(24.dp)
                                 .height(24.dp)
@@ -206,22 +206,23 @@ private fun SuccessMessageBox(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(12.dp)
-            .background(
-                color = Color(0xFFE8F5E9),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
-            )
-            .padding(12.dp)
+    androidx.compose.material3.Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = androidx.compose.material3.CardDefaults.cardColors(
+            containerColor = androidx.compose.material3.MaterialTheme.colorScheme.tertiaryContainer
+        ),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
     ) {
-        Text(
-            message,
-            fontSize = 14.sp,
-            color = Color(0xFF2E7D32),
-            fontWeight = FontWeight.SemiBold
-        )
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                message,
+                fontSize = 14.sp,
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onTertiaryContainer,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
     }
 }
 
@@ -231,21 +232,22 @@ private fun ErrorMessageBox(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(12.dp)
-            .background(
-                color = Color(0xFFFFEBEE),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
-            )
-            .padding(12.dp)
+    androidx.compose.material3.Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = androidx.compose.material3.CardDefaults.cardColors(
+            containerColor = androidx.compose.material3.MaterialTheme.colorScheme.errorContainer
+        ),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
     ) {
-        Text(
-            message,
-            fontSize = 14.sp,
-            color = Color(0xFFC62828),
-            fontWeight = FontWeight.SemiBold
-        )
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                message,
+                fontSize = 14.sp,
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onErrorContainer,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
     }
 }
