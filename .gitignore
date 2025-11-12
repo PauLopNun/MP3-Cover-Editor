@@ -43,3 +43,11 @@ dependency-reduced-pom.xml
 
 # Gradle wrapper
 !gradle/wrapper/gradle-wrapper.jar
+
+# Node.js (should not be in Android project)
+node_modules/
+package-lock.json
+package.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

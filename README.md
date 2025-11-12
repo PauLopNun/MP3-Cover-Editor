@@ -1,6 +1,10 @@
-# MP3 Metadata Editor
+# MP3 Cover Editor
 
 A simple and functional Android application built with **Kotlin** and **Jetpack Compose** that allows users to edit MP3 metadata and add album artwork to their audio files.
+
+## Download
+
+Download the latest release APK from the [Releases](https://github.com/yourusername/MP3-Cover-Editor/releases) page.
 
 ## Features
 
@@ -88,18 +92,25 @@ mp3converter/
 
 ## Installation & Setup
 
-### Prerequisites
-- Android Studio Giraffe or newer
+### For Users
+1. Download the latest APK from the [Releases](https://github.com/yourusername/MP3-Cover-Editor/releases) page
+2. Enable "Install from Unknown Sources" on your Android device
+3. Install the APK and launch the app
+
+### For Developers
+
+#### Prerequisites
+- Android Studio Hedgehog or newer
 - Kotlin plugin
 - Gradle 8.0 or higher
-- JDK 8 or higher
+- JDK 17 or higher
 
-### Building the Project
+#### Building the Project
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd mp3converter
+git clone https://github.com/yourusername/MP3-Cover-Editor.git
+cd MP3-Cover-Editor
 ```
 
 2. Open the project in Android Studio
@@ -169,11 +180,20 @@ These permissions are declared in `AndroidManifest.xml` and will be requested at
 - **Status Messages**: Real-time feedback for success and error conditions
 - **Loading States**: Visual indicators during file operations
 
+## How It Works
+
+The application uses the **Storage Access Framework (SAF)** to:
+1. Request persistent read/write permissions for selected MP3 files
+2. Copy the file to a temporary location for processing
+3. Modify metadata and album art using jaudiotagger library
+4. Write the modified file back to the original location
+
 ## Known Limitations
 
-- The application uses the cache directory to temporarily process content:// URIs
-- Large image files are compressed to optimize MP3 file size
+- The application uses the cache directory to temporarily process files
+- Large image files are compressed to 85% quality to optimize MP3 file size
 - The application is designed for single-file operations (one MP3 at a time)
+- You must re-select the MP3 file after app updates to maintain write permissions
 
 ## Future Enhancements
 

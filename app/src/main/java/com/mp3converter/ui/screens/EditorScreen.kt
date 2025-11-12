@@ -1,5 +1,6 @@
 package com.mp3converter.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,12 +12,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -25,7 +26,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import com.mp3converter.ui.components.MetadataTextField
 import com.mp3converter.ui.viewmodel.Mp3EditorViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditorScreen(
     viewModel: Mp3EditorViewModel,
@@ -51,20 +52,20 @@ fun EditorScreen(
                     Text(
                         "Edit Metadata",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                        fontSize = 20.sp
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Back",
                             tint = Color.White
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF6200EE),
+                    containerColor = Color(0xFF1976D2),
                     titleContentColor = Color.White,
                     navigationIconContentColor = Color.White
                 )
@@ -144,42 +145,52 @@ fun EditorScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
+                horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp)
             ) {
                 Button(
                     onClick = onNavigateBack,
                     modifier = Modifier
                         .weight(1f)
-                        .height(50.dp),
+                        .height(56.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Gray,
+                        containerColor = Color(0xFF757575),
                         contentColor = Color.White
                     ),
-                    enabled = !isLoading
+                    enabled = !isLoading,
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 3.dp,
+                        pressedElevation = 6.dp
+                    )
                 ) {
-                    Text("Cancel", fontSize = 16.sp)
+                    Text("Cancel", fontSize = 17.sp, fontWeight = FontWeight.SemiBold)
                 }
 
                 Button(
                     onClick = { viewModel.saveMetadata() },
                     modifier = Modifier
                         .weight(1f)
-                        .height(50.dp),
+                        .height(56.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF6200EE),
+                        containerColor = Color(0xFF1976D2),
                         contentColor = Color.White
                     ),
-                    enabled = !isLoading
+                    enabled = !isLoading,
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 4.dp,
+                        pressedElevation = 8.dp
+                    )
                 ) {
                     if (isLoading) {
                         CircularProgressIndicator(
                             color = Color.White,
                             modifier = Modifier
-                                .width(20.dp)
-                                .height(20.dp)
+                                .width(24.dp)
+                                .height(24.dp)
                         )
                     } else {
-                        Text("Save", fontSize = 16.sp)
+                        Text("Save Changes", fontSize = 17.sp, fontWeight = FontWeight.SemiBold)
                     }
                 }
             }

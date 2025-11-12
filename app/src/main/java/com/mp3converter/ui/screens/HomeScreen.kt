@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,7 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -36,6 +37,7 @@ import com.mp3converter.ui.components.AlbumArtDisplay
 import com.mp3converter.ui.components.FilePickerButton
 import com.mp3converter.ui.viewmodel.Mp3EditorViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     viewModel: Mp3EditorViewModel,
@@ -49,11 +51,23 @@ fun HomeScreen(
     val successMessage by viewModel.successMessage.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
-    // Audio file picker
+    // Audio file picker with write permissions
     val audioFilePicker = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
-        uri?.let { viewModel.setAudioFileUri(it) }
+        uri?.let {
+            // Take persistable URI permissions for read and write
+            try {
+                context.contentResolver.takePersistableUriPermission(
+                    it,
+                    android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                    android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            viewModel.setAudioFileUri(it)
+        }
     }
 
     // Image file picker
@@ -68,13 +82,13 @@ fun HomeScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "MP3 Metadata Editor",
+                        "MP3 Cover Editor",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                        fontSize = 20.sp
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF6200EE),
+                    containerColor = Color(0xFF1976D2),
                     titleContentColor = Color.White
                 )
             )
@@ -108,28 +122,43 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            // Album Art Display
-            if (metadata.albumArtByteArray != null) {
-                val bitmap = android.graphics.BitmapFactory.decodeByteArray(
-                    metadata.albumArtByteArray,
-                    0,
-                    metadata.albumArtByteArray!!.size
+            // Album Art Display with card
+            androidx.compose.material3.Card(
+                modifier = Modifier
+                    .padding(16.dp),
+                elevation = androidx.compose.material3.CardDefaults.cardElevation(8.dp),
+                colors = androidx.compose.material3.CardDefaults.cardColors(
+                    containerColor = Color.White
                 )
-                AlbumArtDisplay(bitmap = bitmap, size = 200)
-            } else {
-                AlbumArtDisplay(bitmap = null, size = 200)
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    if (metadata.albumArtByteArray != null) {
+                        val bitmap = android.graphics.BitmapFactory.decodeByteArray(
+                            metadata.albumArtByteArray,
+                            0,
+                            metadata.albumArtByteArray!!.size
+                        )
+                        AlbumArtDisplay(bitmap = bitmap, size = 200)
+                    } else {
+                        AlbumArtDisplay(bitmap = null, size = 200)
+                    }
+                }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // File Selection Section
             Text(
                 "Step 1: Select Files",
-                fontSize = 16.sp,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
+                color = Color(0xFF1976D2),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp)
+                    .padding(bottom = 12.dp)
             )
 
             Row(
@@ -140,7 +169,7 @@ fun HomeScreen(
             ) {
                 FilePickerButton(
                     text = "Select MP3",
-                    onClick = { audioFilePicker.launch("audio/mpeg") },
+                    onClick = { audioFilePicker.launch(arrayOf("audio/mpeg", "audio/*")) },
                     modifier = Modifier
                         .weight(1f)
                         .height(48.dp)
@@ -180,46 +209,65 @@ fun HomeScreen(
             if (audioFileUri != null) {
                 Text(
                     "Step 2: Edit Metadata",
-                    fontSize = 16.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
+                    color = Color(0xFF1976D2),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 8.dp, top = 16.dp)
+                        .padding(bottom = 12.dp, top = 16.dp)
                 )
 
                 MetadataPreviewBox(metadata = metadata)
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
                 // Edit Button
                 Button(
                     onClick = onNavigateToEditor,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(50.dp),
+                        .height(56.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF6200EE),
+                        containerColor = Color(0xFF1976D2),
                         contentColor = Color.White
                     ),
-                    enabled = !isLoading
+                    enabled = !isLoading,
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 4.dp,
+                        pressedElevation = 8.dp
+                    )
                 ) {
                     if (isLoading) {
                         CircularProgressIndicator(
                             color = Color.White,
                             modifier = Modifier
-                                .width(20.dp)
-                                .height(20.dp)
+                                .width(24.dp)
+                                .height(24.dp)
                         )
                     } else {
-                        Text("Edit Metadata", fontSize = 16.sp)
+                        Text("Edit Metadata", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
                     }
                 }
             } else {
-                Text(
-                    "Please select an MP3 file to begin",
-                    modifier = Modifier.padding(top = 32.dp),
-                    color = Color.Gray
-                )
+                androidx.compose.material3.Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 32.dp),
+                    colors = androidx.compose.material3.CardDefaults.cardColors(
+                        containerColor = Color(0xFFF5F5F5)
+                    )
+                ) {
+                    Text(
+                        "Please select an MP3 file to begin",
+                        modifier = Modifier
+                            .padding(24.dp)
+                            .fillMaxWidth(),
+                        color = Color.Gray,
+                        fontSize = 16.sp,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                }
             }
         }
     }

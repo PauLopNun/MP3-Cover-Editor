@@ -22,11 +22,14 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // Signing configuration can be added here for automated releases
+            // signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -40,7 +43,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
+        kotlinCompilerExtensionVersion = "1.5.10"
     }
     packaging {
         resources {
@@ -65,8 +68,9 @@ dependencies {
     // File handling and content providers
     implementation("androidx.documentfile:documentfile:1.0.1")
 
-    // MP3 Metadata - jaudiotagger for reading/writing MP3 metadata
-    implementation("org.jaudiotagger:jaudiotagger:2.2.3")
+    // MP3 Metadata - JAudioTagger for reading/writing MP3 metadata
+    // Using the Android-compatible fork
+    implementation("net.jthink:jaudiotagger:3.0.1")
 
     // Image handling
     implementation("androidx.graphics:graphics-core:1.0.0-alpha03")
