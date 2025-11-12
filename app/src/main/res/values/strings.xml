@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MP3 Converter</string>
+    <string name="select_audio">Select Audio File</string>
+    <string name="select_image">Select Image</string>
+    <string name="upload_audio">Upload MP3</string>
+    <string name="upload_image">Upload Image</string>
+    <string name="edit_metadata">Edit Metadata</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="title">Title</string>
+    <string name="artist">Artist</string>
+    <string name="album">Album</string>
+    <string name="genre">Genre</string>
+    <string name="year">Year</string>
+    <string name="comment">Comment</string>
+    <string name="success">Success</string>
+    <string name="error">Error</string>
+    <string name="file_saved">File saved successfully</string>
+    <string name="select_files">Select both audio and image files</string>
+    <string name="apply_cover">Apply Cover</string>
+    <string name="album_art">Album Art</string>
+</resources>

@@ -1,0 +1,8 @@
+# This file is intentionally trackable to help developers get started quickly.
+# Duplicate this to local.properties and update the sdk.dir path if needed.
+
+# Location of the SDK. This is only used by Gradle.
+# For customization when using a Version Control System, please read the
+# header note.
+# Mon Nov 12 00:00:00 GMT 2024
+sdk.dir=/path/to/your/android/sdk
