@@ -4,7 +4,7 @@ A simple and functional Android application built with **Kotlin** and **Jetpack 
 
 ## Download
 
-Download the latest release APK from the [Releases](https://github.com/yourusername/MP3-Cover-Editor/releases) page.
+Download the latest release APK from the [Releases](https://github.com/PauLopNun/MP3-Cover-Editor/releases/tag/v1.1.0) page.
 
 ## Features
 
