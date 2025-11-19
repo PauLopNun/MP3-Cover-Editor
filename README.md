@@ -155,12 +155,17 @@ cd MP3-Cover-Editor
 
 ## Permissions
 
-The application requires the following permissions:
+The application automatically requests the following permissions at startup:
+
+**For Android 13+ (API 33+):**
+- `READ_MEDIA_AUDIO`: To read MP3 files
+- `READ_MEDIA_IMAGES`: To read image files for album art
+
+**For Android 12 and below:**
 - `READ_EXTERNAL_STORAGE`: To read MP3 and image files
 - `WRITE_EXTERNAL_STORAGE`: To write metadata to MP3 files
-- `MANAGE_EXTERNAL_STORAGE`: For full file system access (Android 11+)
 
-These permissions are declared in `AndroidManifest.xml` and will be requested at runtime on Android 6.0+.
+The app will display a permission screen on first launch and guide you through granting the necessary permissions. Without these permissions, the app cannot function.
 
 ## Features in Detail
 
@@ -208,13 +213,14 @@ The application uses the **Storage Access Framework (SAF)** to:
 ## Troubleshooting
 
 ### Permission Issues
-- If file picker doesn't work, ensure the app has storage permissions
-- On Android 11+, check if the app has "All Files Access" permission
+- **Permission denied errors**: The app will automatically request permissions on first launch. If you denied them, you'll see a permission screen. Grant the requested permissions to use the app.
+- **"Failed to update metadata" error**: This typically means storage permissions were not granted. Restart the app to see the permission request again, or go to your device Settings > Apps > MP3 Cover Editor > Permissions and enable storage/media permissions manually.
+- **Different behavior on different devices**: Some devices (like custom ROMs or specific manufacturers) may auto-grant permissions, while others require explicit user approval.
 
 ### Cannot Read/Write MP3 Files
 - Verify the file is a valid MP3 format
-- Check file permissions on your device
-- Ensure the MP3 file is not corrupted
+- Ensure you've granted all storage permissions
+- Check if the MP3 file is not corrupted or protected
 
 ### Album Art Not Appearing
 - Verify you've selected a valid image file
@@ -236,9 +242,27 @@ This project is provided as-is for educational and personal use.
 
 ## Version
 
-- **Current Version**: 1.0.0
+- **Current Version**: 1.2.0
 - **Min SDK**: 26 (Android 8.0)
 - **Target SDK**: 34 (Android 14)
+
+### Changelog
+
+**v1.2.0** (Current)
+- Fixed storage permission issues on different Android versions
+- Added automatic runtime permission requests
+- Improved error messages when permissions are missing
+- Added dedicated permission screen with clear instructions
+- Better handling of Android 13+ granular media permissions
+
+**v1.1.0**
+- Professional UI redesign with dark mode support
+
+**v1.0.1**
+- Added APK signing and music icon
+
+**v1.0.0**
+- Initial release with core MP3 editing functionality
 
 ## Contact & Support
 

@@ -41,7 +41,7 @@ class Mp3Handler(private val context: Context) {
     /**
      * Writes metadata to an MP3 file
      */
-    fun writeMetadata(uri: Uri, metadata: Mp3Metadata): Boolean {
+    fun writeMetadata(uri: Uri, metadata: Mp3Metadata): Result<Boolean> {
         var tempFile: File? = null
         var tempArtworkFile: File? = null
 
@@ -50,7 +50,7 @@ class Mp3Handler(private val context: Context) {
             tempFile = File(context.cacheDir, "temp_audio_edit_${System.currentTimeMillis()}.mp3")
 
             val inputStream = context.contentResolver.openInputStream(uri)
-                ?: throw Exception("Cannot open input stream for URI: $uri")
+                ?: return Result.failure(Exception("Cannot read file. Please check storage permissions."))
 
             inputStream.use { input ->
                 tempFile.outputStream().use { output ->
@@ -59,7 +59,7 @@ class Mp3Handler(private val context: Context) {
             }
 
             if (!tempFile.exists() || tempFile.length() == 0L) {
-                throw Exception("Failed to copy file to temporary location")
+                return Result.failure(Exception("Failed to copy file to temporary location. Storage may be full or permissions missing."))
             }
 
             // Step 2: Modify the temporary file with jaudiotagger
@@ -87,7 +87,7 @@ class Mp3Handler(private val context: Context) {
 
             // Step 3: Copy the modified temporary file back to the original URI
             val outputStream = context.contentResolver.openOutputStream(uri)
-                ?: throw Exception("Cannot open output stream for URI: $uri")
+                ?: return Result.failure(Exception("Cannot write to file. Please check storage permissions."))
 
             outputStream.use { output ->
                 tempFile.inputStream().use { input ->
@@ -95,11 +95,14 @@ class Mp3Handler(private val context: Context) {
                 }
             }
 
-            true
+            Result.success(true)
+        } catch (e: SecurityException) {
+            android.util.Log.e("Mp3Handler", "Permission error writing metadata: ${e.message}", e)
+            Result.failure(Exception("Permission denied. Please grant storage permissions in app settings."))
         } catch (e: Exception) {
             e.printStackTrace()
             android.util.Log.e("Mp3Handler", "Error writing metadata: ${e.message}", e)
-            false
+            Result.failure(Exception("Failed to save metadata: ${e.message}"))
         } finally {
             // Clean up temporary files
             try {

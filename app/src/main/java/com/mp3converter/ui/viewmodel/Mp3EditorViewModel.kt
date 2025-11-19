@@ -101,12 +101,15 @@ class Mp3EditorViewModel(context: Context) : ViewModel() {
             viewModelScope.launch(Dispatchers.IO) {
                 _isLoading.value = true
                 try {
-                    val success = mp3Handler.writeMetadata(currentAudioUri, _metadata.value)
-                    if (success) {
-                        _successMessage.value = "Metadata saved successfully!"
-                    } else {
-                        _errorMessage.value = "Failed to save metadata"
-                    }
+                    val result = mp3Handler.writeMetadata(currentAudioUri, _metadata.value)
+                    result.fold(
+                        onSuccess = {
+                            _successMessage.value = "Metadata saved successfully!"
+                        },
+                        onFailure = { error ->
+                            _errorMessage.value = error.message ?: "Failed to save metadata. Please check storage permissions."
+                        }
+                    )
                 } catch (e: Exception) {
                     _errorMessage.value = "Error: ${e.message}"
                 } finally {
