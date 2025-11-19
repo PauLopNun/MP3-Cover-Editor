@@ -22,10 +22,13 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file("release-keystore.jks")
-            storePassword = "mp3editor2024"
-            keyAlias = "mp3editor"
-            keyPassword = "mp3editor2024"
+            val keystoreFile = file("release-keystore.jks")
+            if (keystoreFile.exists()) {
+                storeFile = keystoreFile
+                storePassword = "mp3editor2024"
+                keyAlias = "mp3editor"
+                keyPassword = "mp3editor2024"
+            }
         }
     }
 
@@ -37,7 +40,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+            // Only sign if keystore exists (local builds), not in CI
+            val keystoreFile = file("release-keystore.jks")
+            if (keystoreFile.exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
     compileOptions {
