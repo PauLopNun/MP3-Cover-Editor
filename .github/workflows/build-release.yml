@@ -26,7 +26,15 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
+    - name: Decode and setup keystore
+      run: |
+        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app/release-keystore.jks
+
     - name: Build Release APK
+      env:
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       run: ./gradlew assembleRelease
 
     - name: Get version name
@@ -34,12 +42,7 @@ jobs:
       run: echo "VERSION_NAME=$(grep versionName app/build.gradle.kts | awk -F'"' '{print $2}')" >> $GITHUB_OUTPUT
 
     - name: Rename APK
-      run: |
-        if [ -f app/build/outputs/apk/release/app-release.apk ]; then
-          mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/MP3-Cover-Editor-v${{ steps.version.outputs.VERSION_NAME }}.apk
-        else
-          mv app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/MP3-Cover-Editor-v${{ steps.version.outputs.VERSION_NAME }}.apk
-        fi
+      run: mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/MP3-Cover-Editor-v${{ steps.version.outputs.VERSION_NAME }}.apk
 
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
